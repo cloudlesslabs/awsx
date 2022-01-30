@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/cloudlesslabs/awsx/compare/v0.0.4...v0.0.5) (2022-01-30)
+
+
+### Features
+
+* Add support for parsing an S3 object's body from buffer to JSON or text ([5d2a9d7](https://github.com/cloudlesslabs/awsx/commit/5d2a9d7bfef1fe5984f88325b49d9394577b10f4))
+
 ### [0.0.4](https://github.com/cloudlesslabs/awsx/compare/v0.0.3...v0.0.4) (2022-01-30)
 
 
