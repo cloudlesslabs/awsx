@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "NodeJS wrapper APIs around the AWS SDK.",
   "main": "src/index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cloudlesslabs/awsx.git"
@@ -13,7 +16,7 @@
   "homepage": "https://github.com/cloudlesslabs/awsx#readme",
   "scripts": {
     "lint": "eslint src/ test/ --fix",
-    "push": "git push --follow-tags origin master && npm publish",
+    "push": "git push --follow-tags origin master && npm publish --access public",
     "rls": "standard-version --release-as",
     "test": "mocha --exit",
     "v": "node -e \"console.log(require('./package.json').version)\""
