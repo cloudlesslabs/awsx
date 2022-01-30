@@ -3,6 +3,7 @@
 This package exposes APIs that wrap the AWS SDK. Its purpose is to get started faster with the AWS SDK for the most common scenarios. The AWS SDK is also exposed to allow access to the natice APIs.
 
 ```
+(test -f .npmrc || echo @cloudlesslabs:registry=https://npm.pkg.github.com/cloudlesslabs >> .npmrc) && \ 
 npm i @cloudlesslabs/awsx
 ```
 
@@ -23,6 +24,7 @@ npm i @cloudlesslabs/awsx
 >		- [`s3.bucket.list`](#s3bucketlist)
 >		- [`s3.bucket.get`](#s3bucketget)
 >		- [`s3.bucket.setWebsite`](#s3bucketsetWebsite)
+>		- [`s3.object.put`](#s3bucketfilesput)
 >		- [`s3.object.upload`](#s3bucketfilesupload)
 >		- [`s3.object.sync`](#s3bucketfilessync)
 >		- [`s3.object.remove`](#s3bucketfilesremove)
@@ -435,6 +437,34 @@ const main = () => catchErrors((async () => {
 	else {
 		console.log(`Bucket set as website`)
 	}
+}
+})())
+
+main().then(([errors]) => {
+	if (errors)
+		console.error(mergeErrors(errors).stack)
+	else
+		console.log('All good')
+})
+```
+### `s3.object.put`
+
+```js
+const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
+const { join } = require('path')
+const { s3 } = require('@cloudlesslabs/awsx')
+
+const main = () => catchErrors((async () => {
+	const [errors] = await s3.object.put({
+		body: {
+			hello: 'world'
+		},
+		bucket: 'my-bucket-name',
+		key: 'path/to/my-folder/example.json'
+	})
+
+	if (errors)
+		throw wrapErrors('Failed to content to bucket', errors)
 }
 })())
 

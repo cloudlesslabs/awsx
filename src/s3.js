@@ -260,7 +260,7 @@ const setWebsite = ({ bucket, index, error, redirect }) => catchErrors((async() 
  * Uploads an object in a bucket under a specific key. Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
  * 
  * @param  {Object}	input		
- * @param  {Buffer}		.body
+ * @param  {Object}		.body					
  * @param  {String}		.bucket					e.g., 'my-super-bucket'
  * @param  {String}		.key					e.g., 'assets/images/hello.jpeg'
  * @param  {String}		.contentType			e.g., 'image/jpeg'
@@ -273,11 +273,31 @@ const setWebsite = ({ bucket, index, error, redirect }) => catchErrors((async() 
  * @return {Void}
  */
 const putObject = input => catchErrors((async() => {
-	const { body:Body, bucket:Bucket, key:Key, contentType:ContentType, cacheControl:CacheControl, contentLength:ContentLength, serverSideEncryption:ServerSideEncryption, storageClass:StorageClass, tagging:Tagging } = input || {}
+	let { body:Body, bucket:Bucket, key:Key, contentType:ContentType, cacheControl:CacheControl, contentLength:ContentLength, serverSideEncryption:ServerSideEncryption, storageClass:StorageClass, tagging:Tagging } = input || {}
 	const e = (...args) => wrapErrors(`Failed to put object in S3 bucket '${Bucket}'.`, ...args)
 
+	if (!Bucket)
+		throw e('Missing required argument \'bucket\'')
+
+	const t = typeof(Body)
+	let b
+	if (Body === undefined || Body === null)
+		b = ''
+	else if (Body instanceof Buffer || t == 'string')
+		b = Body
+	else if (t == 'object') {
+		if (Body instanceof Date)
+			b = Body.toISOString()
+		else
+			b = JSON.stringify(Body, null, '  ')
+	} else 
+		b = `${Body}` 
+
+	if (!ContentLength)
+		ContentLength = b.length
+
 	const [errors, data] = await _s3PutObject({
-		Body,
+		Body: b,
 		Bucket,
 		Key,
 		ContentType,
@@ -532,10 +552,7 @@ const uploadFiles = ({ bucket, files, dir, ignore, ignoreObjects }) => catchErro
 })())
 
 /**
- * Gets the difference between the local files (on disk, in memory or both) and the files in an S3 bucket
- *
- * WARNING: This operation requires a the 's3:PutObject' permission. If the ACL is also set, then the 's3:PutObjectAcl'
- * permission is also required.
+ * Gets the difference between the local files (on disk, in memory or both) and a list of 'previousFiles'
  * 
  * @param  {[Object]}			files[]
  * @param  {Buffer}					.content
