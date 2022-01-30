@@ -15,12 +15,11 @@
  * @return {Promise}	
  */
 const promisify = (api, fn, safeMode) => {
-	const apiFn = api[fn]
 	const callback = safeMode 
 		? (err, data, next) => err ? next([[err], null]) : next([null, data])
 		: (err, data, next, fail) => err ? fail(err) : next(data)
 
-	return (...args) => new Promise((next,fail) => apiFn(...args, (err,data) => callback(err, data, next, fail)))
+	return (...args) => new Promise((next,fail) => api[fn](...args, (err,data) => callback(err, data, next, fail)))
 }
 
 module.exports = {

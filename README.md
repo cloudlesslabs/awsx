@@ -17,7 +17,10 @@ npm i @cloudlesslabs/awsx
 >		- [`cloudfront.distribution.invalidate`](#cloudfrontdistributioninvalidate)
 >		- [`cloudfront.distribution.update`](#cloudfrontdistributionupdate)
 >	- [Cloudwatch](#cloudwatch)
+>		- [`cloudwatch.logs.select`](#cloudwatchlogsselect)
 >	- [Parameter Store](#parameter-store)
+>		- [`parameterStore.get`](#parameterstoreget)
+>		- [`parameterStore.put`](#parameterstoreput)
 >	- [Resource](#resource)
 >	- [S3](#s3)
 >		- [`s3.bucket.exists`](#s3bucketexists)
@@ -222,6 +225,7 @@ const main = () => catchErrors((async () => {
 ```
 
 ## Cloudwatch
+### `cloudwatch.logs.select`
 
 ```js
 const { error: { catchErrors, wrapErrors } } = require('puffy-core')
@@ -265,6 +269,7 @@ const main = () => catchErrors((async () => {
 ```
 
 ## Parameter Store
+### `parameterStore.get`
 
 ```js
 const { parameterStore } = require('@cloudlesslabs/awsx')
@@ -273,7 +278,18 @@ parameterStore.get({
 	name: 'my-parameter-store-name',
 	version: 2, // Optional. If not defined, the latest version is used.
 	json: true // Optional. Default false.
-}).then(([errors, { Value }]) => console.log(Value))
+}).then(([errors, resp]) => console.log(resp))
+// {
+// 	name: 'my-parameter-store-name',
+// 	type: 'String',
+// 	value: {
+// 		hello: 'World'
+// 	},
+// 	version: 2,
+// 	lastModifiedDate: 2022-01-30T07:25:07.516Z,
+// 	arn: 'arn:....',
+// 	dataType: 'text'
+// }
 ```
 
 To use this API, the following policy must be attached to the hosting environmnet's IAM role:
@@ -289,6 +305,29 @@ To use this API, the following policy must be attached to the hosting environmne
 		Effect: 'Allow'
 	}]
 }
+```
+
+### `parameterStore.put`
+
+```js
+const { parameterStore } = require('@cloudlesslabs/awsx')
+
+parameterStore.put({
+	name: 'my-parameter-store-name'
+	value: {
+		hello: 'World'
+	},
+	// description: 'dewde'
+	overWrite: 'dewde'
+	// tier: 'Advanced', // 'Standard' (default) | 'Advanced' | 'Intelligent-Tiering'
+	tags: {
+		Name: 'hello'
+	}
+}).then(([errors, resp]) => console.log(resp))
+// {
+// 	version: 1,
+// 	tier: 'Standard'
+// }
 ```
 
 ## Resource

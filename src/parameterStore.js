@@ -21,18 +21,18 @@ const _ssmPutParameter = promisify(ssm, 'putParameter')
  * 
  * WARNING: Requires the 'ssm:GetParameter' permission in the policy.
  * 
- * @param  {String}  name
- * @param  {String}  version                        Optional. If null, then the latest version is returned.    
- * @param  {Boolean} json                            Default false. True means the Value is parsed to JSON.
+ * @param  {String}		name
+ * @param  {String}		version                        Optional. If null, then the latest version is returned.    
+ * @param  {Boolean}	json                            Default false. True means the Value is parsed to JSON.
  * 
- * @return {Object}     output
- * @return {String}         .name
- * @return {String}         .type                    Valid values: 'String', 'StringList', 'SecureString'
- * @return {String}         .value                    If 'json' is true, this is an object.
- * @return {Number}         .version
- * @return {Date}         .lastModifiedDate        UTC date
- * @return {String}         .arn
- * @return {String}         .dataType                Valid values: 'text', 'aws:ec2:image'
+ * @return {Object}		output
+ * @return {String}			.name
+ * @return {String}			.type                    Valid values: 'String', 'StringList', 'SecureString'
+ * @return {String}			.value                    If 'json' is true, this is an object.
+ * @return {Number}			.version
+ * @return {Date}			.lastModifiedDate        UTC date
+ * @return {String}			.arn
+ * @return {String}			.dataType                Valid values: 'text', 'aws:ec2:image'
  */
 const getParameter = ({ name, version, json }) => catchErrors((async () => {
 	const e = (...args) => wrapErrors(`Failed to get AWS Parameter store variable '${name||''}'.`, ...args)
@@ -71,17 +71,17 @@ const getParameter = ({ name, version, json }) => catchErrors((async () => {
 /**
  * 
  * 
- * @param  {String}        name            Required.
- * @param  {Object}        value           Required.
- * @param  {String}     type            Valid types are 'String' (default), 'StringList' and 'SecureString'    
- * @param  {String}        description 
- * @param  {Boolean}    overWrite   
- * @param  {String}        tier            'Standard' (default) | 'Advanced' | 'Intelligent-Tiering'
- * @param  {Object}        tags      
+ * @param  {String}		name            Required.
+ * @param  {Object}		value           Required.
+ * @param  {String}		type            Valid types are 'String' (default), 'StringList' and 'SecureString'    
+ * @param  {String}		description 
+ * @param  {Boolean}	overWrite   
+ * @param  {String}		tier            'Standard' (default) | 'Advanced' | 'Intelligent-Tiering'
+ * @param  {Object}		tags      
  *   
- * @return {Object}        output
- * @return {Number}            .version        
- * @return {String}            .tier        
+ * @return {Object}		output
+ * @return {Number}			.version        
+ * @return {String}			.tier        
  */
 const putParameter = ({ name, type, value, description, overWrite, tags, tier }) => catchErrors((async () => {
 	const e = (...args) => wrapErrors(`Failed to create/update AWS Parameter store variable '${name||''}'.`, ...args)
