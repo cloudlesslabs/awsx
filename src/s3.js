@@ -17,8 +17,10 @@ const AWS = require('aws-sdk')
 const { REGION, promisify } = require('./_utils')
 const s3 = new AWS.S3({ apiVersion: '2006-03-01', computeChecksums: true, region:REGION })
 
+// Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
+const _getObject = promisify(s3, 'getObject', true)
 // Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
-const _s3PutObject = promisify(s3, 'putObject', true)
+const _putObject = promisify(s3, 'putObject', true)
 // Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#listBuckets-property
 const _listBuckets = promisify(s3, 'listBuckets', true)
 // Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#createBucket-property
@@ -257,6 +259,36 @@ const setWebsite = ({ bucket, index, error, redirect }) => catchErrors((async() 
 })())
 
 /**
+ * 
+ * @param  {Object}	input
+ * @param  {String}		.bucket		
+ * @param  {String}		.key
+ * 		
+ * @return {[type]}       [description]
+ */
+const getObject = input => catchErrors((async () => {
+	const { bucket:Bucket, key:Key } = input || {}
+	const e = (...args) => wrapErrors(`Failed to get object from bucket '${Bucket}/${Key}'.`, ...args)
+
+	if (!Bucket)
+		throw e(`Missing required argument '${Bucket}'`)
+	if (!Key)
+		throw e(`Missing required argument '${Key}'`)
+
+	const [errors, resp] = await _getObject({
+		Bucket,
+		Key
+	})
+
+	if (errors)
+		throw e(errors)
+
+	// const {} = resp || {}
+	return resp
+
+})())
+
+/**
  * Uploads an object in a bucket under a specific key. Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
  * 
  * @param  {Object}	input		
@@ -296,7 +328,7 @@ const putObject = input => catchErrors((async() => {
 	if (!ContentLength)
 		ContentLength = b.length
 
-	const [errors, data] = await _s3PutObject({
+	const [errors, data] = await _putObject({
 		Body: b,
 		Bucket,
 		Key,
@@ -845,6 +877,7 @@ module.exports = {
 		setWebsite
 	},
 	object: {
+		'get': getObject,
 		put: putObject,
 		sync: syncFiles,
 		upload: uploadFiles,
