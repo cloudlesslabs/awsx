@@ -259,15 +259,24 @@ const setWebsite = ({ bucket, index, error, redirect }) => catchErrors((async() 
 })())
 
 /**
+ * Doc: Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
  * 
  * @param  {Object}	input
  * @param  {String}		.bucket		
  * @param  {String}		.key
+ * @param  {String}		.type 		Allowed values: 'buffer' (default), 'json', 'text'
  * 		
- * @return {[type]}       [description]
+ * @return {Object}	output
+ * @return {String}		.acceptRanges	e.g., 'bytes'
+ * @return {Date}		.lastModified
+ * @return {Number}		.contentLength
+ * @return {String}		.eTag
+ * @return {String}		.contentType
+ * @return {Object}		.metadata
+ * @return {Object}		.body			Type depends on the 'type' value.
  */
 const getObject = input => catchErrors((async () => {
-	const { bucket:Bucket, key:Key } = input || {}
+	const { bucket:Bucket, key:Key, type } = input || {}
 	const e = (...args) => wrapErrors(`Failed to get object from bucket '${Bucket}/${Key}'.`, ...args)
 
 	if (!Bucket)
@@ -280,11 +289,45 @@ const getObject = input => catchErrors((async () => {
 		Key
 	})
 
-	if (errors)
+	if (errors) {
+		if (errors[0] && errors[0].code && errors[0].code.toLowerCase && errors[0].code.toLowerCase() == 'nosuchkey')
+			return null
 		throw e(errors)
+	}
 
-	// const {} = resp || {}
-	return resp
+	let {
+		AcceptRanges: acceptRanges,
+		LastModified: lastModified,
+		ContentLength: contentLength,
+		ETag: eTag,
+		ContentType: contentType,
+		Metadata: metadata,
+		Body: body
+	} = resp || {}
+
+	if (type == 'json') {
+		try {
+			body = body && body.length ? JSON.parse(body.toString()) : {}
+		} catch (err) {
+			throw e('Failed to parse object from buffer to JSON object', err)
+		}
+	} else if (type == 'text') {
+		try {
+			body = body && body.length ? body.toString() : ''
+		} catch (err) {
+			throw e('Failed to parse object from buffer to string', err)
+		}
+	}
+
+	return {
+		acceptRanges,
+		lastModified,
+		contentLength,
+		eTag,
+		contentType,
+		metadata,
+		body
+	}
 
 })())
 
@@ -302,7 +345,8 @@ const getObject = input => catchErrors((async () => {
  * @param  {String}		.storageClass			e.g., 'STANDARD_IA'
  * @param  {String}		.tagging				e.g., 'key1=value1&key2=value2'
  * 
- * @return {Void}
+ * @return {Object}	output
+ * @return {String}		.etag
  */
 const putObject = input => catchErrors((async() => {
 	let { body:Body, bucket:Bucket, key:Key, contentType:ContentType, cacheControl:CacheControl, contentLength:ContentLength, serverSideEncryption:ServerSideEncryption, storageClass:StorageClass, tagging:Tagging } = input || {}
@@ -343,7 +387,9 @@ const putObject = input => catchErrors((async() => {
 	if (errors)
 		throw e(errors)
 
-	return data
+	return {
+		etag: (data||{}).ETag
+	}
 })())
 
 /**

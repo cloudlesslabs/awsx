@@ -498,13 +498,25 @@ const { s3 } = require('@cloudlesslabs/awsx')
 const main = () => catchErrors((async () => {
 	const [errors, data] = await s3.object.get({
 		bucket: 'my-bucket-name',
-		key: 'path/to/my-folder/example.json'
+		key: 'path/to/my-folder/example.json',
+		type: 'json' // valid values: 'buffer' (default), 'json', 'text'
 	})
 
 	if (errors)
 		throw wrapErrors('Failed to content to bucket', errors)
 
 	console.log(data)
+	// {
+	// 	acceptRanges: 'bytes',
+	// 	lastModified: 2022-01-30T09:52:30.000Z,
+	// 	contentLength: 22,
+	// 	eTag: '"add7403b95c4164509110b1eac281ae6"',
+	// 	contentType: 'application/json',
+	// 	metadata: {},
+	// 	body: {
+	// 		hello: 'World'
+	// 	}
+	// }
 }
 })())
 
@@ -524,7 +536,7 @@ const { join } = require('path')
 const { s3 } = require('@cloudlesslabs/awsx')
 
 const main = () => catchErrors((async () => {
-	const [errors] = await s3.object.put({
+	const [errors, data] = await s3.object.put({
 		body: {
 			hello: 'world'
 		},
@@ -534,6 +546,11 @@ const main = () => catchErrors((async () => {
 
 	if (errors)
 		throw wrapErrors('Failed to content to bucket', errors)
+
+	console.log(data)
+	// {
+	// 	etag: '"add7403b95c4164509110b1eac281ae6"'
+	// }
 }
 })())
 
