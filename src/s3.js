@@ -335,7 +335,8 @@ const getObject = input => catchErrors((async () => {
  * Uploads an object in a bucket under a specific key. Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
  * 
  * @param  {Object}	input		
- * @param  {Object}		.body					
+ * @param  {Object}		.body
+ * @param  {String}		.format					Default null. Helps with the stringification format when 'body' is not a string. Allowed values: 'json-single-line' (default), 'json-multi-line' 
  * @param  {String}		.bucket					e.g., 'my-super-bucket'
  * @param  {String}		.key					e.g., 'assets/images/hello.jpeg'
  * @param  {String}		.contentType			e.g., 'image/jpeg'
@@ -349,7 +350,18 @@ const getObject = input => catchErrors((async () => {
  * @return {String}		.etag
  */
 const putObject = input => catchErrors((async() => {
-	let { body:Body, bucket:Bucket, key:Key, contentType:ContentType, cacheControl:CacheControl, contentLength:ContentLength, serverSideEncryption:ServerSideEncryption, storageClass:StorageClass, tagging:Tagging } = input || {}
+	let { 
+		body:Body, 
+		bucket:Bucket, 
+		key:Key, 
+		contentType:ContentType, 
+		cacheControl:CacheControl, 
+		contentLength:ContentLength, 
+		serverSideEncryption:ServerSideEncryption, 
+		storageClass:StorageClass, 
+		tagging:Tagging,
+		format 
+	} = input || {}
 	const e = (...args) => wrapErrors(`Failed to put object in S3 bucket '${Bucket}'.`, ...args)
 
 	if (!Bucket)
@@ -365,7 +377,7 @@ const putObject = input => catchErrors((async() => {
 		if (Body instanceof Date)
 			b = Body.toISOString()
 		else
-			b = JSON.stringify(Body, null, '  ')
+			b = format == 'json-multi-line' ? JSON.stringify(Body, null, '  ') : JSON.stringify(Body)
 	} else 
 		b = `${Body}` 
 

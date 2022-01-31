@@ -537,9 +537,10 @@ const { s3 } = require('@cloudlesslabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const [errors, data] = await s3.object.put({
-		body: {
+		body: { // When the 'body' is not a Buffer, it is stringified. The format can be controlled via the 'format' property.
 			hello: 'world'
 		},
+		// format: 'json-multi-line', // This option stringifies the JSON using multiple lines rather than a single one.
 		bucket: 'my-bucket-name',
 		key: 'path/to/my-folder/example.json'
 	})
