@@ -1,6 +1,6 @@
 {
   "name": "@cloudlesslabs/awsx",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "NodeJS wrapper APIs around the AWS SDK.",
   "main": "src/index.js",
   "publishConfig": {

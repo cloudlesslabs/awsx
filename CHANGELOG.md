@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/cloudlesslabs/awsx/compare/v0.0.5...v0.1.0) (2022-01-31)
+
+
+### Features
+
+* Add support for formatting a JSON object when stored in S3 ([c84ed98](https://github.com/cloudlesslabs/awsx/commit/c84ed98f992ebf4c5ab53cbf1693a8f87cb37764))
+
 ### [0.0.5](https://github.com/cloudlesslabs/awsx/compare/v0.0.4...v0.0.5) (2022-01-30)
 
 
