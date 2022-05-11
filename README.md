@@ -1,10 +1,9 @@
 # CLOUDLESS LABS - AWSX
 
-This package exposes APIs that wrap the AWS SDK. Its purpose is to get started faster with the AWS SDK for the most common scenarios. The AWS SDK is also exposed to allow access to the natice APIs.
+This package exposes APIs that wrap the AWS SDK. Its purpose is to get started faster with the AWS SDK for the most common scenarios. The AWS SDK is also exposed to allow access to the native APIs.
 
 ```
-(test -f .npmrc || echo @cloudlesslabs:registry=https://npm.pkg.github.com/cloudlesslabs >> .npmrc) && \ 
-npm i @cloudlesslabs/awsx
+npm i @cloudlessopenlabs/awsx
 ```
 
 # Table of contents
@@ -48,7 +47,7 @@ For concrete examples, please refer to the [Annexes](#annexes):
 
 ```js
 const { error: { catchErrors, wrapErrors } } = require('puffy-core')
-const { cloudfront } = require('@cloudlesslabs/awsx')
+const { cloudfront } = require('@cloudlessopenlabs/awsx')
 
 const DISTRO = `my-distro-name`
 
@@ -78,7 +77,7 @@ const main = () => catchErrors((async () => {
 
 ```js
 const { error: { catchErrors, wrapErrors } } = require('puffy-core')
-const { cloudfront } = require('@cloudlesslabs/awsx')
+const { cloudfront } = require('@cloudlessopenlabs/awsx')
 
 const DISTRO = `my-distro-name`
 
@@ -138,7 +137,7 @@ const main = () => catchErrors((async () => {
 
 ```js
 const { error: { catchErrors, wrapErrors } } = require('puffy-core')
-const { cloudfront } = require('@cloudlesslabs/awsx')
+const { cloudfront } = require('@cloudlessopenlabs/awsx')
 
 const DISTRO = `my-distro-name`
 
@@ -171,7 +170,7 @@ const main = () => catchErrors((async () => {
 
 ```js
 const { error: { catchErrors, wrapErrors } } = require('puffy-core')
-const { cloudfront } = require('@cloudlesslabs/awsx')
+const { cloudfront } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	// Invalidate all paths
@@ -201,7 +200,7 @@ const main = () => catchErrors((async () => {
 
 ```js
 const { error: { catchErrors, wrapErrors } } = require('puffy-core')
-const { cloudfront } = require('@cloudlesslabs/awsx')
+const { cloudfront } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	// Invalidate all paths
@@ -230,7 +229,7 @@ const main = () => catchErrors((async () => {
 
 ```js
 const { error: { catchErrors, wrapErrors } } = require('puffy-core')
-const { cloudwatch } = require('@cloudlesslabs/awsx')
+const { cloudwatch } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	// Invalidate all paths
@@ -273,7 +272,7 @@ const main = () => catchErrors((async () => {
 ### `parameterStore.get`
 
 ```js
-const { parameterStore } = require('@cloudlesslabs/awsx')
+const { parameterStore } = require('@cloudlessopenlabs/awsx')
 
 parameterStore.get({
 	name: 'my-parameter-store-name',
@@ -311,7 +310,7 @@ To use this API, the following policy must be attached to the hosting environmne
 ### `parameterStore.put`
 
 ```js
-const { parameterStore } = require('@cloudlesslabs/awsx')
+const { parameterStore } = require('@cloudlessopenlabs/awsx')
 
 parameterStore.put({
 	name: 'my-parameter-store-name'
@@ -337,7 +336,7 @@ parameterStore.put({
 
 ```js
 const { error: { catchErrors, mergeErrors } } = require('puffy-core')
-const { resource } = require('@cloudlesslabs/awsx')
+const { resource } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const [resourceErrors, resources] = await resource.getByTags({ 
@@ -380,7 +379,7 @@ For concrete examples, please refer to the [Annexes](#annexes):
 
 ```js
 const { error: { catchErrors, mergeErrors } } = require('puffy-core')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const bucketName = 'some-bucket-name'
@@ -400,7 +399,7 @@ main().then(([errors]) => {
 
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const [errors, bucketList] = await s3.bucket.list()
@@ -429,7 +428,7 @@ main().then(([errors]) => {
 
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const bucketName = 'some-bucket-name'
@@ -463,7 +462,7 @@ main().then(([errors]) => {
 
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const bucketName = 'some-bucket-name'
@@ -490,10 +489,14 @@ main().then(([errors]) => {
 
 ### `s3.object.get`
 
+Requires the `s3:GetObject` permission. Ideally you also add the `s3:ListBucket` permission. Without the `s3:ListBucket` permission, missing object return a 403 Access Denied error rather than a 404 No suck key error.
+
+> WARNING: There used to be a bug where the underlying AWS API always return 403 access denied regardless of whether the `s3:ListBucket` permission is present or not.
+
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
 const { join } = require('path')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const [errors, data] = await s3.object.get({
@@ -530,10 +533,12 @@ main().then(([errors]) => {
 
 ### `s3.object.put`
 
+Requires the `s3:PutObject` permission.
+
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
 const { join } = require('path')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const [errors, data] = await s3.object.put({
@@ -568,7 +573,7 @@ main().then(([errors]) => {
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
 const { join } = require('path')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const [uploadErrors, filesInDir] = await s3.object.upload({ 
@@ -603,7 +608,7 @@ Does the same as 'upload' but with the ability to delete files that have been re
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
 const { join } = require('path')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const [syncErrors, synchedData] = await s3.object.sync({ 
@@ -657,7 +662,7 @@ main().then(([errors]) => {
 
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
-const { s3 } = require('@cloudlesslabs/awsx')
+const { s3 } = require('@cloudlessopenlabs/awsx')
 
 const main = () => catchErrors((async () => {
 	const [rmErrors] = await s3.object.remove({ 
@@ -694,7 +699,7 @@ Notice that the only way to use `cloudfront.distribution.exists` with another pr
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
 const { join } = require('path')
-const { s3, cloudfront, resource } = require('@cloudlesslabs/awsx')
+const { s3, cloudfront, resource } = require('@cloudlessopenlabs/awsx')
 
 const BUCKET = 'nic-today-20211015'
 const DISTRO = `${BUCKET}-distro`
@@ -785,6 +790,7 @@ main().then(([errors]) => {
 ## Cloudfront distribution with private S3 bucket 
 
 # License
+
 BSD 3-Clause License
 
 Copyright (c) 2019-2022, Cloudless Consulting Pty Ltd

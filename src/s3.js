@@ -261,6 +261,9 @@ const setWebsite = ({ bucket, index, error, redirect }) => catchErrors((async() 
 /**
  * Doc: Doc: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
  * 
+ * WARNING: Requires the 's3:GetObject' permission. Ideally you also add the 's3:ListBucket' permission. Without 
+ * the 's3:ListBucket' permission, missing object return a 403 Access Denied error rather than a 404 No suck key error.
+ * 
  * @param  {Object}	input
  * @param  {String}		.bucket		
  * @param  {String}		.key
