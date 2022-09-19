@@ -31,6 +31,8 @@ npm i @cloudlessopenlabs/awsx
 >		- [`s3.object.upload`](#s3objectupload) 
 >		- [`s3.object.sync`](#s3objectsync)
 >		- [`s3.object.remove`](#s3objectremove)
+>	- [SNS](#sns)
+>		- [`topic.publish`](#topicpublish)
 > * [Annexes](#annexes)
 >	- [Cloudfront distribution with S3 static website bucket](#cloudfront-distribution-with-s3-static-website-bucket)
 >	- [Cloudfront distribution with private S3 bucket ](#cloudfront-distribution-with-private-s3-bucket)
@@ -676,6 +678,45 @@ const main = () => catchErrors((async () => {
 		throw wrapErrors('Failed to remove files from bucket', rmErrors)
 	else
 		console.log(`Files removed`)
+}
+})())
+
+main().then(([errors]) => {
+	if (errors)
+		console.error(mergeErrors(errors).stack)
+	else
+		console.log('All good')
+})
+```
+
+## SNS
+### `topic.publish`
+
+```js
+const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
+const { sns } = require('@cloudlessopenlabs/awsx')
+
+const topic = new sns.Topic('arn::your-topic-arn') 
+
+const main = () => catchErrors((async () => {
+	// Supports sending string message "as-is"
+	const [errors01, resp01] = await topic.publish('hello world')
+	// Supports sending an object, as long as the object contains the required 'body' property.
+	const [errors02, resp02] = await topic.publish({ body:'Hello world', attributes: { hello:'world' } })
+	// Supports sending SMSes
+	const [errors03, resp03] = await topic.publish('Hello world', { 
+		phone:'+61420876543',
+		// subject: 'Hello from me', // Optional
+		// type: 'promotional' // Optional. Valid values: 'promotional', 'transactional'
+	})
+
+	if (errors01 || errors02 || errors03)
+		throw wrapErrors(errors01 || errors02 || errors03)
+	else {
+		console.log(resp01)
+		console.log(resp02)
+		console.log(resp03)
+	}
 }
 })())
 
