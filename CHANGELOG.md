@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/cloudlesslabs/awsx/compare/v0.2.0...v0.2.1) (2022-09-19)
+
+
+### Bug Fixes
+
+* Incorrect puffy-core dependency ([1e0b98e](https://github.com/cloudlesslabs/awsx/commit/1e0b98e4969e3d5ac0f4ef1cdfe9b4a9edecdf2c))
+
 ## [0.2.0](https://github.com/cloudlesslabs/awsx/compare/v0.1.2...v0.2.0) (2022-09-19)
 
 
