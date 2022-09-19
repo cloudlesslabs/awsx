@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/cloudlesslabs/awsx/compare/v0.1.2...v0.2.0) (2022-09-19)
+
+
+### Features
+
+* Add support for SNS ([78e2faf](https://github.com/cloudlesslabs/awsx/commit/78e2faf46aa49e07db468eadf2abc08eff5a1845))
+
 ### [0.1.2](https://github.com/cloudlesslabs/awsx/compare/v0.1.1...v0.1.2) (2022-07-20)
 
 
