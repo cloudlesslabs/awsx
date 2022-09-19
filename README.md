@@ -692,6 +692,7 @@ main().then(([errors]) => {
 ## SNS
 ### `topic.publish`
 
+
 ```js
 const { error: { catchErrors, wrapErrors, mergeErrors } } = require('puffy-core')
 const { sns } = require('@cloudlessopenlabs/awsx')
@@ -713,9 +714,9 @@ const main = () => catchErrors((async () => {
 	if (errors01 || errors02 || errors03)
 		throw wrapErrors(errors01 || errors02 || errors03)
 	else {
-		console.log(resp01)
-		console.log(resp02)
-		console.log(resp03)
+		console.log(resp01) // { ResponseMetadata: { RequestId: '123' }, MessageId: '456' }
+		console.log(resp02) // { ResponseMetadata: { RequestId: '321' }, MessageId: '345' }
+		console.log(resp03) // { ResponseMetadata: { RequestId: '875' }, MessageId: '517' }
 	}
 }
 })())

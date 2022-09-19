@@ -81,9 +81,11 @@ const _formatAttr = attributes => {
  * @param  {String}			options.phone						E.164 format phone number (e.g., +61420496232)
  * @param  {String}			options.subject
  * @param  {String}			options.type						Valid values: 'promotional' or 'transactional'
- * 
- * @yield  {String}			output.ResponseMetadata.RequestId
- * @yield  {String}			output.MessageId	
+ *
+ * @return {Object}			resp
+ * @return {Object}				.ResponseMetadata
+ * @return {String}					.RequestId
+ * @return {String}				.MessageId
  */
 const publish = (topicARN, payload, options) => catchErrors((async () => {
 	const e = wrapErrorsFn('Failed to publish message to topic')
