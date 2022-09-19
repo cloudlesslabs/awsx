@@ -11,5 +11,6 @@ module.exports = {
 	cloudwatch: require('./cloudwatch'),
 	parameterStore: require('./parameterStore'),
 	resource: require('./resource'),
-	s3: require('./s3')
+	s3: require('./s3'),
+	sns: require('./sns')
 }
